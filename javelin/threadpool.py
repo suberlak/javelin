@@ -61,9 +61,12 @@ import os
 import numpy as np
 
 # exceptions
+
+
 class NoResultsPending(Exception):
     """All work requests have been processed."""
     pass
+
 
 class NoWorkersAvailable(Exception):
     """No worker threads available to process remaining requests."""
@@ -83,7 +86,7 @@ def _handle_thread_exception(request, exc_info):
 
 # utility functions
 def makeRequests(callable_, args_list, callback=None,
-        exc_callback=_handle_thread_exception):
+                 exc_callback=_handle_thread_exception):
     """Create several work requests for same callable with different arguments.
 
     Convenience function for creating several work requests for the same
@@ -104,12 +107,12 @@ def makeRequests(callable_, args_list, callback=None,
         if isinstance(item, tuple):
             requests.append(
                 WorkRequest(callable_, item[0], item[1], callback=callback,
-                    exc_callback=exc_callback)
+                            exc_callback=exc_callback)
             )
         else:
             requests.append(
                 WorkRequest(callable_, [item], None, callback=callback,
-                    exc_callback=exc_callback)
+                            exc_callback=exc_callback)
             )
     return requests
 
@@ -182,7 +185,7 @@ class WorkRequest:
     """
 
     def __init__(self, callable_, args=None, kwds=None, requestID=None,
-            callback=None, exc_callback=_handle_thread_exception):
+                 callback=None, exc_callback=_handle_thread_exception):
         """Create a work request for a callable and attach callbacks.
 
         A work request consists of the a callable to be executed by a
@@ -235,6 +238,7 @@ class WorkRequest:
         """
         for attr in ['exception', 'callback', 'exc_callback', 'callable', 'args', 'kwds']:
             delattr(self, attr)
+
 
 class ThreadPool:
     """A thread pool, distributing work requests and collecting results.
@@ -303,13 +307,12 @@ class ThreadPool:
         self.workRequests[request.requestID] = request
 
 
-
-
 try:
     __PyMCThreadPool__ = ThreadPool(int(os.environ['OMP_NUM_THREADS']))
 except:
     import multiprocessing
     __PyMCThreadPool__ = ThreadPool(multiprocessing.cpu_count())
+
 
 class CountDownLatch(object):
     def __init__(self, n):
@@ -317,13 +320,15 @@ class CountDownLatch(object):
         self.main_lock = threading.Lock()
         self.counter_lock = threading.Lock()
         self.main_lock.acquire()
+
     def countdown(self):
         self.counter_lock.acquire()
         self.n -= 1
         if self.n == 0:
             self.main_lock.release()
         self.counter_lock.release()
-    def await(self):
+
+    def await_(self):
         self.main_lock.acquire()
         self.main_lock.release()
 
@@ -340,7 +345,7 @@ def map_noreturn(targ, argslist):
     """
 
     # Thanks to Anne Archibald's handythread.py for the exception handling mechanism.
-    exceptions=[]
+    exceptions = []
     n_threads = len(argslist)
 
     exc_lock = threading.Lock()
@@ -357,8 +362,9 @@ def map_noreturn(targ, argslist):
         dl.countdown()
 
     for args in argslist:
-        __PyMCThreadPool__.putRequest(WorkRequest(targ, callback = cb, exc_callback=eb, args=args, requestID = id(args)))
-    done_lock.await()
+        __PyMCThreadPool__.putRequest(WorkRequest(
+            targ, callback=cb, exc_callback=eb, args=args, requestID=id(args)))
+    done_lock.await_()
 
     if exceptions:
         a, b, c = exceptions[0]
@@ -369,20 +375,22 @@ def set_threadpool_size(n):
     if n > 0:
         __PyMCThreadPool__.setNumWorkers(n)
 
+
 def get_threadpool_size():
     return len(__PyMCThreadPool__.workers)
-    
+
+
 def thread_partition_array(x):
     "Partition work arrays for multithreaded addition and multiplication"
     n_threads = get_threadpool_size()
-    if len(x.shape)>1:
+    if len(x.shape) > 1:
         maxind = x.shape[1]
     else:
         maxind = x.shape[0]
-    bounds = np.array(np.linspace(0, maxind, n_threads+1),dtype='int')
+    bounds = np.array(np.linspace(0, maxind, n_threads+1), dtype='int')
     cmin = bounds[:-1]
     cmax = bounds[1:]
-    return cmin,cmax
+    return cmin, cmax
 
 
 __PyMCLock__ = threading.Lock()
