@@ -1,4 +1,4 @@
-from __future__ import with_statement
+
 import os
 import warnings
 import pickle
@@ -16,7 +16,7 @@ def getMatplotlibVersion():
         import matplotlib
         version = matplotlib.__version__.replace('svn', '')
         version = matplotlib.__version__.replace('svn', '')
-        version = map(int, version.split(".")[:2])
+        version = list(map(int, version.split(".")[:2]))
     except ImportError:
         version = None
     return version

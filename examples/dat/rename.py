@@ -6,7 +6,7 @@ import os
 for file in os.listdir("."):
     if file.endswith(".myrun") :
         newfile = file.replace(".myrun", "")
-        print "rename " + file + " to " + newfile
+        print("rename " + file + " to " + newfile)
         os.rename(file, newfile)
 
 

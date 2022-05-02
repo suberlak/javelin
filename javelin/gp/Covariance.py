@@ -6,7 +6,7 @@ __all__ = ['Covariance']
 
 from numpy import *
 from numpy.linalg import cholesky, LinAlgError
-from GPutils import regularize_array, trisolve, square_and_sum
+from .GPutils import regularize_array, trisolve, square_and_sum
 from javelin.gp.linalg_utils import diag_call, dpotrf_wrap
 from javelin.gp.incomplete_chol import ichol, ichol_continue
 
@@ -133,7 +133,7 @@ class Covariance(object):
 
         # Arrange output matrix and return.
         if m<0:
-            raise ValueError, "Matrix does not appear to be positive semidefinite"
+            raise ValueError("Matrix does not appear to be positive semidefinite")
 
         if not apply_pivot:
             # Useful for self.observe and Realization.__call__. U is upper triangular.
@@ -279,7 +279,7 @@ class Covariance(object):
 
         # Arrange output matrix and return.
         if m<0:
-            raise ValueError, 'Matrix does not appear positive semidefinite.'
+            raise ValueError('Matrix does not appear positive semidefinite.')
 
         if not apply_pivot:
             # Useful for self.observe. U is upper triangular.
@@ -312,7 +312,7 @@ class Covariance(object):
 
         if self.ndim is not None:
             if not ndim==self.ndim:
-                raise ValueError, "Dimension of observation mesh is not equal to dimension of base mesh."
+                raise ValueError("Dimension of observation mesh is not equal to dimension of base mesh.")
         else:
             self.ndim = ndim
 
@@ -337,11 +337,11 @@ class Covariance(object):
             else:
                 C_eval = self.__call__(obs_mesh,obs_mesh,regularize=False)
                 U = C_eval.copy('F')
-                for i in xrange(U.shape[0]):
+                for i in range(U.shape[0]):
                     U[i,i] += obs_V[i]
                 info = dpotrf_wrap(U)
                 if info>0:
-                    raise LinAlgError, "Matrix does not appear to be positive definite by row %i. Could not observe with assume_full_rank=True." %info
+                    raise LinAlgError("Matrix does not appear to be positive definite by row %i. Could not observe with assume_full_rank=True." %info)
                 obs_dict = {'U': U,'pivots': arange(U.shape[0]),'U_new':U,'C_eval':C_eval}
             obs_dict_new = obs_dict
 
@@ -477,10 +477,10 @@ class Covariance(object):
         # Safety
         if self.ndim is not None:
             if not self.ndim == ndimx:
-                raise ValueError, "The number of spatial dimensions of x, "+\
+                raise ValueError("The number of spatial dimensions of x, "+\
                                     ndimx.__str__()+\
                                     ", does not match the number of spatial dimensions of the Covariance instance's base mesh, "+\
-                                    self.ndim.__str__()+"."
+                                    self.ndim.__str__()+".")
 
 
         # If there are observation points, prepare self(obs_mesh, x)
@@ -498,7 +498,7 @@ class Covariance(object):
             # Otherwise, evaluate the diagonal in a loop.
             else:
                 V=empty(lenx,dtype=float)
-                for i in xrange(lenx):
+                for i in range(lenx):
                     this_x = x[i].reshape((1,-1))
                     V[i] = self.eval_fun(this_x, this_x, **self.params)
             if self.observed and observed:
@@ -544,7 +544,7 @@ class Covariance(object):
                 leny = y.shape[0]
 
                 if not ndimx==ndimy:
-                    raise ValueError, 'The last dimension of x and y (the number of spatial dimensions) must be the same.'
+                    raise ValueError('The last dimension of x and y (the number of spatial dimensions) must be the same.')
 
                 C = self.eval_fun(x,y,**self.params)
 

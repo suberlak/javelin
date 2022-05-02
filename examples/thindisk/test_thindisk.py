@@ -15,7 +15,7 @@ else:
     cont.do_mcmc(nwalkers=100, nburn=100, nchain=200, fburn=None, fchain="driver_chain.dat", threads=1)
 
 conthpd = cont.hpd
-print conthpd
+print(conthpd)
 
 data1 = get_data(["driver.dat", "wave2.dat", "wave3.dat", "wave4.dat"], names=["Driver", "Wave 2", "Wave 3", "Wave 4"])
 data1.plot()

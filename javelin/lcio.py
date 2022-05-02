@@ -169,7 +169,7 @@ def writelc(lightcurvearray, lcdata, fmt="10.5f"):
         f = lcdata
     nlc = len(lightcurvearray)
     f.write(str(nlc)+"\n")
-    for ilc in xrange(nlc):
+    for ilc in range(nlc):
         lightcurve = lightcurvearray[ilc]
         assert len(lightcurve) == 3, "Input list not consist of 3-column sublists"
         jd, pt, er = lightcurve

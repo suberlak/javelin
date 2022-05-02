@@ -55,7 +55,7 @@ __all__ = [
 # standard library modules
 import sys
 import threading
-import Queue
+import queue
 import traceback
 import os
 import numpy as np
@@ -77,7 +77,7 @@ def _handle_thread_exception(request, exc_info):
     This just prints the exception info via ``traceback.print_exception``.
 
     """
-    print exc_info
+    print(exc_info)
     traceback.print_exception(*exc_info)
 
 
@@ -264,7 +264,7 @@ class ThreadPool:
             To prevent this, always set ``timeout > 0`` when calling
             ``ThreadPool.putRequest()`` and catch ``Queue.Full`` exceptions.
         """
-        self._requests_queue = Queue.Queue(q_size)
+        self._requests_queue = queue.Queue(q_size)
         # self._results_queue = Queue.Queue(resq_size)
         self.workers = []
         self.workRequests = {}
@@ -362,7 +362,7 @@ def map_noreturn(targ, argslist):
 
     if exceptions:
         a, b, c = exceptions[0]
-        raise a, b, c
+        raise a(b).with_traceback(c)
 
 
 def set_threadpool_size(n):

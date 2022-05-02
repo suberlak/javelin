@@ -15,7 +15,7 @@ else:
     cont.do_mcmc(nwalkers=100, nburn=100, nchain=100, fburn=None, fchain="cont_chain.dat", threads=8)
 
 conthpd = cont.hpd
-print conthpd
+print(conthpd)
 
 data1 = get_data(["Mrk509Gband_short.txt", "Mrk509Hband_normalized.txt"], names=["G-band", "H-band"])
 data1.plot(figout='lc_gh', figext='pdf')

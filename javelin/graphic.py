@@ -34,7 +34,7 @@ def figure_handler(fig=None, figout=None, figext=None, dpi=None, pad_inches=0.1,
         printed = True
     elif isinstance(fig, plt.Figure):
         if figout is None:
-            for i in xrange(100):
+            for i in range(100):
                 # figout = "fig"+str(i)
                 figout = "fig"+str(i).zfill(2)
                 if (len(glob(figout+".*")) == 0):

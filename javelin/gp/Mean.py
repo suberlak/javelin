@@ -3,7 +3,7 @@
 __docformat__='reStructuredText'
 
 from numpy import *
-from GPutils import regularize_array, trisolve
+from .GPutils import regularize_array, trisolve
 
 __all__ = ['Mean','zero_fn']
 
@@ -106,7 +106,7 @@ class Mean(object):
         # Safety.
         if self.ndim is not None:
             if not self.ndim == ndimx:
-                raise ValueError, "The number of spatial dimensions of x does not match the number of spatial dimensions of the Mean instance's base mesh."
+                raise ValueError("The number of spatial dimensions of x does not match the number of spatial dimensions of the Mean instance's base mesh.")
 
         # Evaluate the unobserved mean
         M = self.eval_fun(x,**self.params).squeeze()

@@ -26,12 +26,12 @@ def fast_matrix_copy(f, t=None, n_threads=1):
     Not any faster than a serial copy so far.
     """
     if not f.flags['F_CONTIGUOUS']:
-        raise RuntimeError, 'This will not be fast unless input array f is Fortran-contiguous.'
+        raise RuntimeError('This will not be fast unless input array f is Fortran-contiguous.')
 
     if t is None:
         t=asmatrix(empty(f.shape, order='F'))
     elif not t.flags['F_CONTIGUOUS']:
-        raise RuntimeError, 'This will not be fast unless input array t is Fortran-contiguous.'
+        raise RuntimeError('This will not be fast unless input array t is Fortran-contiguous.')
 
     # Figure out how to divide job up between threads.
     dcopy_wrap(ravel(asarray(f.T)),ravel(asarray(t.T)))
@@ -90,7 +90,7 @@ def square_and_sum(a,s):
     Writes np.sum(a**2,axis=0) into s
     """
     cmin, cmax = thread_partition_array(a)
-    map_noreturn(asqs, [(a,s,cmin[i],cmax[i]) for i in xrange(len(cmax))])
+    map_noreturn(asqs, [(a,s,cmin[i],cmax[i]) for i in range(len(cmax))])
     return a
 
 class caching_callable(object):
@@ -168,7 +168,7 @@ def trisolve(U,b,uplo='U',transa='N',alpha=1.,inplace=False):
     else:
         x = b.copy('F')
     if U.shape[0] == 0:
-        raise ValueError, 'Attempted to solve zero-rank triangular system'
+        raise ValueError('Attempted to solve zero-rank triangular system')
     dtrsm_wrap(a=U,b=x,side='L',uplo=uplo,transa=transa,alpha=alpha)
     return x
 
@@ -233,7 +233,7 @@ def plot_envelope(M,C,mesh):
         fill(x,y,facecolor='.8',edgecolor='1.')
         plot(mesh, mean, 'k-.')
     except ImportError:
-        print "Matplotlib is not installed; plotting is disabled."
+        print("Matplotlib is not installed; plotting is disabled.")
 
 def observe(M, C, obs_mesh, obs_vals, obs_V = 0, lintrans = None, cross_validate = True):
     """
@@ -281,7 +281,7 @@ def observe(M, C, obs_mesh, obs_vals, obs_V = 0, lintrans = None, cross_validate
     if obs_mesh_new.shape[0] < obs_mesh.shape[0]:
         if cross_validate:
             if not predictive_check(obs_vals, obs_mesh, M, C.obs_piv, sqrt(C.relative_precision)):
-                raise ValueError, "These data seem extremely improbable given your GP prior. \n Suggestions: decrease observation precision, or adjust the covariance to \n allow the function to be less smooth."
+                raise ValueError("These data seem extremely improbable given your GP prior. \n Suggestions: decrease observation precision, or adjust the covariance to \n allow the function to be less smooth.")
 
 
 def predictive_check(obs_vals, obs_mesh, M, posdef_indices, tolerance):
@@ -333,7 +333,7 @@ def point_predict(f, x, size=1, nugget=None):
 
 
 def point_eval(M, C, x):
-    from BasisCovariance import BasisCovariance
+    from .BasisCovariance import BasisCovariance
     """
     Evaluates M(x) and C(x).
     

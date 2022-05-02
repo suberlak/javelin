@@ -60,10 +60,10 @@ def brownian(x,y,amp=1.,scale=1.,origin=None,h=.5,symm=None):
     # multithreaded call.
 
     if h<0 or h>1:
-        raise ValueError, 'Parameter h must be between 0 and 1.'
+        raise ValueError('Parameter h must be between 0 and 1.')
 
     if amp<0. or scale<0.:
-        raise ValueError, 'The amp and scale parameters must be positive.'
+        raise ValueError('The amp and scale parameters must be positive.')
 
     if symm is None:
         symm = (x is y)
@@ -90,7 +90,7 @@ def brownian(x,y,amp=1.,scale=1.,origin=None,h=.5,symm=None):
     if n_threads <= 1:
         brownian_targ(C,x,y,h,amp,0,-1,symm)
     else:
-        thread_args=[(C,x,y,h,amp,bounds[i],bounds[i+1],symm) for i in xrange(n_threads)]
+        thread_args=[(C,x,y,h,amp,bounds[i],bounds[i+1],symm) for i in range(n_threads)]
         map_noreturn(brownian_targ, thread_args)
 
     return C

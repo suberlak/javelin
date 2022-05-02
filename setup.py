@@ -61,7 +61,7 @@ if lapack_info:
     config.add_extension(name='gp.incomplete_chol',sources=['javelin/gp/incomplete_chol.f'], extra_info=lapack_info)
 
 if not lapack_info or dist in ['bdist', 'sdist']:
-    print 'No optimized BLAS or Lapack libraries found, building from source. This may take a while...'
+    print('No optimized BLAS or Lapack libraries found, building from source. This may take a while...')
     f_sources = ['javelin/blas_wrap.f']
     for fname in os.listdir('blas/BLAS'):
         if fname[-2:]=='.f':

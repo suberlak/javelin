@@ -1,7 +1,7 @@
 # Copyright (c) Anand Patil, 2007
 
 import numpy as np
-import wrapped_distances
+from . import wrapped_distances
 import inspect
 import imp
 import pickle
@@ -98,21 +98,21 @@ class covariance_wrapper(object):
         self.with_x = with_x
 
         # Add covariance parameters to function signature
-        for parameter in extra_cov_params.iterkeys():
+        for parameter in extra_cov_params.keys():
             self.__doc__ += ', ' + parameter
         # Add distance parameters to function signature
         if hasattr(distance_fun,'extra_parameters'):
             self.extra_distance_params = distance_fun.extra_parameters
-            for parameter in self.extra_distance_params.iterkeys():
+            for parameter in self.extra_distance_params.keys():
                 self.__doc__ += ', ' + parameter
         # Document covariance parameters
         self.__doc__ += covariance_wrapperdoc[1]
         if hasattr(cov_fun, 'extra_parameters'):
-            for parameter in extra_cov_params.iterkeys():
+            for parameter in extra_cov_params.keys():
                 self.__doc__ += "\n\n    - " + parameter + ": " + extra_cov_params[parameter]
         # Document distance parameters.
         if hasattr(distance_fun,'extra_parameters'):
-            for parameter in self.extra_distance_params.iterkeys():
+            for parameter in self.extra_distance_params.keys():
                 self.__doc__ += "\n\n    - " + parameter + ": " + self.extra_distance_params[parameter]
 
         self.__doc__ += "\n\nDistances are computed using "+distance_fun.__name__+":\n\n"+distance_fun.__doc__
@@ -120,7 +120,7 @@ class covariance_wrapper(object):
     def __call__(self,x,y,amp=1.,scale=1.,symm=None,*args,**kwargs):
 
         if amp<0. or scale<0.:
-            raise ValueError, 'The amp and scale parameters must be positive.'
+            raise ValueError('The amp and scale parameters must be positive.')
 
         if symm is None:
             symm = (x is y)
@@ -139,8 +139,8 @@ class covariance_wrapper(object):
         # Split off the distance arguments
         distance_arg_dict = {}
         if hasattr(self.distance_fun, 'extra_parameters'):
-            for key in self.extra_distance_params.iterkeys():
-                if key in kwargs.keys():
+            for key in self.extra_distance_params.keys():
+                if key in list(kwargs.keys()):
                     distance_arg_dict[key] = kwargs.pop(key)
 
         # Allocate the matrix
@@ -160,7 +160,7 @@ class covariance_wrapper(object):
         if n_threads <= 1:
             targ(C,x,y,0,-1,symm)
         else:
-            thread_args = [(C,x,y,bounds[i],bounds[i+1],symm) for i in xrange(n_threads)]
+            thread_args = [(C,x,y,bounds[i],bounds[i+1],symm) for i in range(n_threads)]
             map_noreturn(targ, thread_args)
 
         if symm:

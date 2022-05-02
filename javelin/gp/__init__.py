@@ -15,14 +15,14 @@ __modules__ = [ 'GPutils',
               ]
 
 
-from GPutils import *
-from Mean import *
-from Covariance import *
-from BasisCovariance import *
-from FullRankCovariance import *
-from NearlyFullRankCovariance import *
-from Realization import *
-from cov_funs import *
+from .GPutils import *
+from .Mean import *
+from .Covariance import *
+from .BasisCovariance import *
+from .FullRankCovariance import *
+from .NearlyFullRankCovariance import *
+from .Realization import *
+from .cov_funs import *
 
 try:
     import SparseCovariance
